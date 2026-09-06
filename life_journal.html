@@ -372,49 +372,72 @@ function toggleTag(chip, tag) {
 function toggleVoice() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { toast('Głos niedostępny w tej przeglądarce. Użyj Chrome na Androidzie.'); return; }
-  if (isListening) { recognition.stop(); return; }
 
-  recognition = new SR();
-  recognition.lang = voiceLang;
-  recognition.interimResults = true;
-  recognition.continuous = true;
+  if (isListening) {
+    // User manually stops — stop and polish
+    isListening = false;
+    if (recognition) recognition.abort();
+    const btn     = document.getElementById('vbtn');
+    const lbl     = document.getElementById('vlabel');
+    const interim = document.getElementById('interim');
+    const box     = document.getElementById('tbox');
+    btn.classList.remove('listening');
+    lbl.textContent = 'Naciśnij, aby dyktować';
+    interim.classList.remove('show');
+    if (apiKey && box.value.trim().length > 15) polishText(box.value.trim(), box);
+    return;
+  }
 
   const btn     = document.getElementById('vbtn');
   const lbl     = document.getElementById('vlabel');
   const interim = document.getElementById('interim');
   const box     = document.getElementById('tbox');
-  let finalText = box.value.trim();
 
-  recognition.onstart = () => {
-    isListening = true;
-    btn.classList.add('listening');
-    lbl.textContent = 'Słucham… naciśnij, aby zatrzymać';
-  };
+  // Capture existing text before starting
+  let committedText = box.value.trim();
 
-  recognition.onresult = e => {
-    let add = '', temp = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) add += e.results[i][0].transcript;
-      else temp += e.results[i][0].transcript;
-    }
-    if (add) finalText = (finalText + ' ' + add).trim();
-    box.value = finalText + (temp ? ' ' + temp : '');
-    interim.textContent = temp;
-    interim.classList.toggle('show', !!temp);
-  };
+  function startRecognition() {
+    if (!isListening) return; // was stopped manually
+    recognition = new SR();
+    recognition.lang = voiceLang;
+    recognition.interimResults = true;
+    recognition.continuous = false; // single utterance, we restart manually
 
-  recognition.onerror = () => recognition.stop();
+    recognition.onresult = e => {
+      let finalChunk = '', interimChunk = '';
+      for (let i = 0; i < e.results.length; i++) {
+        if (e.results[i].isFinal) finalChunk += e.results[i][0].transcript;
+        else interimChunk += e.results[i][0].transcript;
+      }
+      // Show interim preview
+      interim.textContent = interimChunk;
+      interim.classList.toggle('show', !!interimChunk);
+      // Update box: committed + new final + interim preview
+      const display = (committedText + (committedText && finalChunk ? ' ' : '') + finalChunk).trim();
+      box.value = display + (interimChunk ? ' ' + interimChunk : '');
+      if (finalChunk) committedText = display;
+    };
 
-  recognition.onend = () => {
-    isListening = false;
-    btn.classList.remove('listening');
-    lbl.textContent = 'Naciśnij, aby dyktować';
-    interim.classList.remove('show');
-    // auto-polish with Claude if key exists
-    if (apiKey && box.value.trim().length > 15) polishText(box.value.trim(), box);
-  };
+    recognition.onerror = e => {
+      if (e.error === 'no-speech' || e.error === 'aborted') {
+        // restart silently if still listening
+        if (isListening) startRecognition();
+      }
+    };
 
-  recognition.start();
+    recognition.onend = () => {
+      interim.classList.remove('show');
+      // Auto-restart to keep listening until user taps stop
+      if (isListening) startRecognition();
+    };
+
+    try { recognition.start(); } catch(e) {}
+  }
+
+  isListening = true;
+  btn.classList.add('listening');
+  lbl.textContent = 'Słucham… naciśnij, aby zatrzymać';
+  startRecognition();
 }
 
 async function polishText(raw, box) {
