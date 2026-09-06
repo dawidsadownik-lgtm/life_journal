@@ -5,78 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#16213e">
 <title>Life Journal</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
 :root{
-  --gold:#e2b04a;--gold2:#f5c842;--gdim:rgba(226,176,74,0.15);--gdim2:rgba(226,176,74,0.08);
-  --ink:#0f0f1a;--ink2:#16213e;--ink3:#1a2744;--ink4:#0f3460;
-  --card:#1e1e32;--card2:#252540;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --gold:#e2b04a;--gold2:#f5c842;--gdim:rgba(226,176,74,0.15);
+  --ink2:#16213e;--ink4:#0f3460;
+  --card:#1e1e32;--border:rgba(255,255,255,0.07);
   --text:#e8e4f0;--text2:#a8a4c0;--text3:#6a6a88;
   --success:#4caf7d;--danger:#e05c5c;--r:14px;
 }
-#app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:480px;margin:0 auto;position:relative}
-
-/* HEADER */
-.hdr{background:var(--ink2);padding:env(safe-area-inset-top,12px) 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;padding-top:max(env(safe-area-inset-top),12px)}
-.hdr-left .title{color:var(--gold);font-size:18px;font-weight:600;letter-spacing:0.2px}
-.hdr-left .date{color:var(--text3);font-size:12px;margin-top:1px}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:480px;margin:0 auto}
+.hdr{background:var(--ink2);padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;padding-top:max(env(safe-area-inset-top),14px)}
+.hdr .title{color:var(--gold);font-size:18px;font-weight:600}
+.hdr .date{color:var(--text3);font-size:12px;margin-top:1px}
 .hdr-right{display:flex;align-items:center;gap:10px}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);transition:background 0.3s}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text3)}
 .sync-dot.ok{background:var(--success)}
-.lock-icon{font-size:18px;color:var(--gold);opacity:0.8}
-
-/* NAV */
 .nav{display:flex;background:var(--ink2);border-top:1px solid rgba(255,255,255,0.05);padding:2px 4px max(env(safe-area-inset-bottom,4px),4px);flex-shrink:0}
 .nb{flex:1;padding:8px 2px 6px;background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:10px;transition:color 0.15s,background 0.15s;font-family:inherit}
 .nb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nb.active{color:var(--gold);background:var(--gdim)}
-
-/* SCREENS */
 .screens{flex:1;overflow:hidden;position:relative}
-.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:16px;display:none;-webkit-overflow-scrolling:touch}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:16px;display:none;-webkit-overflow-scrolling:touch}
 .screen.active{display:block}
 
-/* RECORD SCREEN */
-.mood-label{font-size:12px;color:var(--text3);margin-bottom:8px}
+/* MOOD */
+.lbl{font-size:12px;color:var(--text3);margin-bottom:8px}
 .mood-row{display:flex;gap:6px;margin-bottom:16px}
 .mb{flex:1;padding:10px 2px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:20px;text-align:center;transition:border-color 0.15s,background 0.15s}
 .mb.sel{border-color:var(--gold);background:var(--gdim)}
 
-.voice-zone{display:flex;flex-direction:column;align-items:center;padding:24px 0 20px}
-.vbtn{width:82px;height:82px;border-radius:50%;background:var(--ink4);border:3px solid var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s;position:relative}
+/* VOICE */
+.voice-zone{display:flex;flex-direction:column;align-items:center;padding:20px 0 16px}
+.vbtn{width:86px;height:86px;border-radius:50%;background:var(--ink4);border:3px solid var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s;position:relative}
 .vbtn:active{transform:scale(0.93)}
-.vbtn svg{width:34px;height:34px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round}
-.vbtn.listening{border-color:var(--gold2);animation:pulse 1.4s ease infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 8px rgba(226,176,74,0.14),0 0 0 20px rgba(226,176,74,0.05)}50%{box-shadow:0 0 0 16px rgba(226,176,74,0.08),0 0 0 32px rgba(226,176,74,0.02)}}
-.vlabel{margin-top:12px;font-size:13px;color:var(--text3)}
-.interim{background:var(--gdim);border:1px solid rgba(226,176,74,0.25);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--gold);margin-top:8px;display:none;max-width:100%;text-align:center;word-break:break-word}
-.interim.show{display:block}
+.vbtn svg{width:36px;height:36px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round}
+.vbtn.recording{border-color:#e05c5c;background:#2a1010;animation:rpulse 1s ease infinite}
+.vbtn.recording svg{stroke:#e05c5c}
+.vbtn.processing{border-color:var(--gold2);opacity:0.7}
+@keyframes rpulse{0%,100%{box-shadow:0 0 0 8px rgba(224,92,92,0.15),0 0 0 20px rgba(224,92,92,0.05)}50%{box-shadow:0 0 0 16px rgba(224,92,92,0.08),0 0 0 32px rgba(224,92,92,0.02)}}
+.vlabel{margin-top:12px;font-size:13px;color:var(--text3);text-align:center}
+.vtimer{font-size:22px;font-weight:600;color:var(--danger);margin-top:6px;display:none;font-variant-numeric:tabular-nums}
+.vtimer.show{display:block}
+.vsize{font-size:11px;color:var(--text3);margin-top:3px;display:none}
+.vsize.show{display:block}
 
-.entry-box{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;min-height:96px;font-size:15px;line-height:1.65;color:var(--text);outline:none;resize:none;font-family:inherit}
+/* ENTRY */
+.entry-box{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;min-height:100px;font-size:15px;line-height:1.65;color:var(--text);outline:none;resize:none;font-family:inherit}
 .entry-box::placeholder{color:var(--text3)}
-
 .tags-wrap{margin:12px 0 4px}
 .tags-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.tc{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);font-size:12px;cursor:pointer;color:var(--text3);transition:all 0.15s;font-family:inherit}
+.tc{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);font-size:12px;cursor:pointer;color:var(--text3);font-family:inherit}
 .tc.sel{border-color:var(--gold);background:var(--gdim);color:var(--gold)}
-
 .btn-row{display:flex;gap:10px;margin-top:14px}
-.btn-row button{flex:1;padding:13px;border-radius:var(--r);border:none;font-size:14px;cursor:pointer;font-family:inherit;font-weight:500;transition:opacity 0.15s}
-.btn-row button:active{opacity:0.8}
+.btn-row button{flex:1;padding:13px;border-radius:var(--r);border:none;font-size:14px;cursor:pointer;font-family:inherit;font-weight:500}
 .bsave{background:var(--gold);color:#1a1a00}
 .bclear{background:var(--card);color:var(--text3);border:1px solid var(--border)!important}
-
 .ai-box{background:var(--ink4);border-radius:var(--r);padding:14px;margin-top:14px;display:none}
 .ai-box.open{display:block}
-.ai-lbl{font-size:11px;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:5px}
-.ai-lbl svg{width:13px;height:13px;stroke:var(--gold);fill:none;stroke-width:2}
+.ai-lbl{font-size:11px;color:var(--gold);margin-bottom:8px}
 .ai-txt{font-size:14px;line-height:1.65;color:rgba(255,255,255,0.85)}
 
-/* ENTRIES SCREEN */
+/* ENTRIES */
 .sec-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:14px}
 .search-wrap{position:relative;margin-bottom:14px}
 .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:2;pointer-events:none}
@@ -86,14 +79,12 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
 .ec-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .ec-date{font-size:11px;color:var(--text3)}
 .ec-mood{font-size:18px}
-.ec-text{font-size:14px;line-height:1.6;color:var(--text2)}
+.ec-text{font-size:14px;line-height:1.6;color:var(--text2);white-space:pre-wrap}
 .ec-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
 .ec-tag{padding:2px 8px;border-radius:10px;background:var(--gdim);color:var(--gold);font-size:11px;border:1px solid rgba(226,176,74,0.2)}
 .ec-actions{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);flex-wrap:wrap}
-.ec-actions button{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:none;font-size:12px;cursor:pointer;color:var(--text3);font-family:inherit;transition:all 0.15s}
-.ec-actions button:active{opacity:0.7}
+.ec-actions button{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:none;font-size:12px;cursor:pointer;color:var(--text3);font-family:inherit}
 .abtn{color:var(--gold)!important;border-color:rgba(226,176,74,0.25)!important;background:var(--gdim)!important}
-.tbtn{color:var(--success)!important;border-color:rgba(76,175,125,0.25)!important;background:rgba(76,175,125,0.07)!important}
 .dbtn{color:var(--danger)!important;border-color:rgba(224,92,92,0.2)!important}
 
 /* INSIGHTS */
@@ -102,16 +93,14 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
 .sn{font-size:26px;font-weight:600;color:var(--gold)}
 .sl{font-size:11px;color:var(--text3);margin-top:2px}
 .mchart{display:flex;align-items:flex-end;gap:5px;height:64px;margin:8px 0 26px}
-.bar{flex:1;border-radius:4px 4px 0 0;min-height:4px;position:relative;transition:height 0.3s}
-.bar span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:13px}
+.bar{flex:1;border-radius:4px 4px 0 0;min-height:4px;position:relative}
+.bar span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:12px}
 .summary-btn{width:100%;padding:13px;border-radius:var(--r);border:1.5px solid rgba(226,176,74,0.3);background:var(--gdim);color:var(--gold);font-size:14px;cursor:pointer;font-family:inherit;font-weight:500;margin-bottom:4px}
-.summary-btn:active{opacity:0.8}
 
 /* GOALS */
 .goal-item{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px}
-.gc{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-family:inherit}
-.gc.done{border-color:var(--success);background:var(--success)}
-.gc.done::after{content:'✓';color:#fff;font-size:13px;font-weight:600}
+.gc{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:inherit;color:transparent}
+.gc.done{border-color:var(--success);background:var(--success);color:#fff;font-size:13px;font-weight:600}
 .gt{flex:1;font-size:14px;color:var(--text)}
 .gd{color:var(--text3);font-size:20px;cursor:pointer;padding:4px;line-height:1}
 .add-goal{display:flex;gap:8px;margin-top:4px}
@@ -120,44 +109,43 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
 .add-goal button{padding:12px 18px;border-radius:var(--r);border:none;background:var(--gold);color:#1a1a00;font-size:14px;cursor:pointer;font-family:inherit;font-weight:500}
 
 /* SETTINGS */
-.setting-group{margin-bottom:24px}
 .sg-title{font-size:13px;color:var(--text3);margin-bottom:10px;font-weight:500}
+.setting-group{margin-bottom:24px}
 .lang-row{display:flex;gap:8px;margin-bottom:16px}
-.lb{flex:1;padding:10px 4px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;font-family:inherit;color:var(--text2);text-align:center;transition:all 0.15s}
+.lb{flex:1;padding:10px 4px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;font-family:inherit;color:var(--text2);text-align:center}
 .lb.active{border-color:var(--gold);background:var(--gdim);color:var(--gold);font-weight:500}
 .field{width:100%;padding:12px;border-radius:var(--r);border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-bottom:10px}
 .field:focus{border-color:var(--gold)}
-.save-key-btn{width:100%;padding:13px;border-radius:var(--r);border:none;background:var(--gold);color:#1a1a00;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:8px}
+.save-btn{width:100%;padding:13px;border-radius:var(--r);border:none;background:var(--gold);color:#1a1a00;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:8px}
 .hint{font-size:12px;color:var(--text3);line-height:1.6;margin-bottom:16px}
 .data-btn{width:100%;padding:12px 16px;border-radius:var(--r);border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:14px;cursor:pointer;font-family:inherit;text-align:left;margin-bottom:10px;display:flex;align-items:center;gap:10px}
 .data-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
 .danger-btn{border-color:rgba(224,92,92,0.3)!important;background:rgba(224,92,92,0.07)!important;color:var(--danger)!important}
+.key-status{font-size:12px;margin-bottom:12px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card)}
+.key-status.ok{border-color:rgba(76,175,125,0.3);color:var(--success)}
+.key-status.missing{border-color:rgba(224,92,92,0.3);color:var(--danger)}
 
 /* EMPTY */
 .empty{text-align:center;padding:48px 16px;color:var(--text3)}
 .empty svg{width:44px;height:44px;stroke:currentColor;fill:none;stroke-width:1.5;margin-bottom:14px}
 .empty p{font-size:14px}
 
-/* SPINNER */
 .spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.15);border-top-color:var(--gold);border-radius:50%;animation:sp 0.7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
-
-/* TOAST */
-.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);left:50%;transform:translateX(-50%);background:var(--ink4);color:#fff;padding:11px 22px;border-radius:24px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.25s;border:1px solid rgba(226,176,74,0.2);white-space:nowrap;pointer-events:none}
+.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);left:50%;transform:translateX(-50%);background:var(--ink4);color:#fff;padding:11px 22px;border-radius:24px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.25s;border:1px solid rgba(226,176,74,0.2);white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div id="app">
-
   <div class="hdr">
-    <div class="hdr-left">
+    <div>
       <div class="title">Life Journal</div>
       <div class="date" id="hdate"></div>
     </div>
     <div class="hdr-right">
       <div class="sync-dot" id="sdot"></div>
-      <span class="lock-icon">🔒</span>
+      <span style="font-size:18px;color:var(--gold);opacity:0.8">🔒</span>
     </div>
   </div>
 
@@ -165,7 +153,7 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
 
     <!-- RECORD -->
     <div class="screen active" id="s-record">
-      <div class="mood-label">Jak się czujesz?</div>
+      <div class="lbl">Jak się czujesz?</div>
       <div class="mood-row">
         <button class="mb" onclick="selMood(this,'😞','awful',1)">😞</button>
         <button class="mb" onclick="selMood(this,'😕','bad',2)">😕</button>
@@ -175,18 +163,19 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
       </div>
 
       <div class="voice-zone">
-        <button class="vbtn" id="vbtn" onclick="toggleVoice()" aria-label="Nagraj głos">
-          <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>
+        <button class="vbtn" id="vbtn" onclick="toggleRecord()">
+          <svg id="vicon" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>
         </button>
-        <div class="vlabel" id="vlabel">Naciśnij, aby dyktować</div>
-        <div class="interim" id="interim"></div>
+        <div class="vlabel" id="vlabel">Naciśnij i mów</div>
+        <div class="vtimer" id="vtimer">0:00</div>
+        <div class="vsize" id="vsize"></div>
       </div>
 
-      <div class="mood-label">Twój wpis</div>
-      <textarea class="entry-box" id="tbox" placeholder="Mów powyżej lub pisz tutaj…" rows="4"></textarea>
+      <div class="lbl">Twój wpis</div>
+      <textarea class="entry-box" id="tbox" placeholder="Nagraj głos powyżej lub pisz tutaj…" rows="5"></textarea>
 
       <div class="tags-wrap">
-        <div class="mood-label">Tagi</div>
+        <div class="lbl">Tagi</div>
         <div class="tags-row">
           <button class="tc" onclick="toggleTag(this,'praca')">praca</button>
           <button class="tc" onclick="toggleTag(this,'zdrowie')">zdrowie</button>
@@ -203,10 +192,7 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
       </div>
 
       <div class="ai-box" id="ai-rec">
-        <div class="ai-lbl">
-          <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-          Refleksja AI
-        </div>
+        <div class="ai-lbl">✦ Refleksja AI</div>
         <div class="ai-txt" id="ai-rec-txt"></div>
       </div>
     </div>
@@ -229,14 +215,11 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
         <div class="sc"><div class="sn" id="i-streak">0</div><div class="sl">Dni z rzędu</div></div>
         <div class="sc"><div class="sn" id="i-mood">—</div><div class="sl">Śr. nastrój</div></div>
       </div>
-      <div class="mood-label">Nastrój — ostatnie 7 wpisów</div>
+      <div class="lbl">Nastrój — ostatnie 7 wpisów</div>
       <div class="mchart" id="mchart"></div>
       <button class="summary-btn" onclick="weekSummary()">✦ Generuj tygodniowe podsumowanie</button>
       <div class="ai-box" id="ai-week">
-        <div class="ai-lbl">
-          <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-          Tygodniowa analiza
-        </div>
+        <div class="ai-lbl">✦ Tygodniowa analiza</div>
         <div class="ai-txt" id="ai-week-txt"></div>
       </div>
     </div>
@@ -256,19 +239,28 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
       <div class="sec-title">Ustawienia</div>
 
       <div class="setting-group">
-        <div class="sg-title">Język dyktowania</div>
+        <div class="sg-title">Język nagrywania</div>
         <div class="lang-row">
-          <button class="lb" id="l-pl" onclick="setLang('pl-PL',this)">🇵🇱 Polski</button>
-          <button class="lb" id="l-en" onclick="setLang('en-US',this)">🇬🇧 English</button>
-          <button class="lb" id="l-de" onclick="setLang('de-DE',this)">🇩🇪 Deutsch</button>
+          <button class="lb active" id="l-pl" onclick="setLang('pl',this)">🇵🇱 Polski</button>
+          <button class="lb" id="l-en" onclick="setLang('en',this)">🇬🇧 English</button>
+          <button class="lb" id="l-de" onclick="setLang('de',this)">🇩🇪 Deutsch</button>
         </div>
       </div>
 
       <div class="setting-group">
-        <div class="sg-title">Klucz API Anthropic (Claude)</div>
-        <input class="field" type="password" id="ak-input" placeholder="sk-ant-…" />
-        <button class="save-key-btn" onclick="saveKey('ak','lj_ak','ak-input')">Zapisz klucz Claude</button>
-        <div class="hint">Przechowywany tylko na tym urządzeniu. Używany do poprawy transkrypcji i analizy AI.</div>
+        <div class="sg-title">🎤 OpenAI API key — Whisper (transkrypcja głosu)</div>
+        <div id="oai-status" class="key-status missing">❌ Brak klucza — transkrypcja głosowa niedostępna</div>
+        <input class="field" type="password" id="oai-input" placeholder="sk-proj-…" />
+        <button class="save-btn" onclick="saveOAIKey()">Zapisz klucz OpenAI</button>
+        <div class="hint">Używany TYLKO do transkrypcji głosu przez Whisper. Koszt: ~1 grosz za wpis.</div>
+      </div>
+
+      <div class="setting-group">
+        <div class="sg-title">🤖 Anthropic API key — Claude (analiza AI)</div>
+        <div id="ant-status" class="key-status missing">❌ Brak klucza — analiza AI niedostępna</div>
+        <input class="field" type="password" id="ant-input" placeholder="sk-ant-…" />
+        <button class="save-btn" onclick="saveAntKey()">Zapisz klucz Claude</button>
+        <div class="hint">Używany do refleksji, analizy wpisów i tygodniowych podsumowań.</div>
       </div>
 
       <div class="setting-group">
@@ -277,62 +269,65 @@ html,body{height:100%;overflow:hidden;background:#0f0f1a;font-family:-apple-syst
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Eksportuj jako JSON
         </button>
-        <button class="data-btn" onclick="importData()">
+        <button class="data-btn" onclick="document.getElementById('import-file').click()">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           Importuj z JSON
         </button>
-        <button class="data-btn danger-btn" onclick="if(confirm('Usunąć wszystkie dane? Tej operacji nie można cofnąć.'))clearAll()">
-          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        <button class="data-btn danger-btn" onclick="if(confirm('Usunąć wszystkie dane?'))clearAll()">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
           Usuń wszystkie dane
         </button>
       </div>
-
-      <div class="hint" style="text-align:center;margin-top:8px;">Life Journal v2.0 · Wszystko lokalnie na Twoim urządzeniu</div>
+      <div class="hint" style="text-align:center">Life Journal v3.0 · Whisper + Claude · Dane tylko na tym urządzeniu</div>
     </div>
 
-  </div><!-- /screens -->
+  </div>
 
   <nav class="nav">
-    <button class="nb active" id="nb-record" onclick="showScreen('record',this)">
+    <button class="nb active" onclick="showScreen('record',this)">
       <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>
       Nagraj
     </button>
-    <button class="nb" id="nb-entries" onclick="showScreen('entries',this)">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    <button class="nb" onclick="showScreen('entries',this)">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Wpisy
     </button>
-    <button class="nb" id="nb-insights" onclick="showScreen('insights',this)">
+    <button class="nb" onclick="showScreen('insights',this)">
       <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       Wgląd
     </button>
-    <button class="nb" id="nb-goals" onclick="showScreen('goals',this)">
+    <button class="nb" onclick="showScreen('goals',this)">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       Cele
     </button>
-    <button class="nb" id="nb-settings" onclick="showScreen('settings',this)">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <button class="nb" onclick="showScreen('settings',this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       Ustawienia
     </button>
   </nav>
-
 </div>
+
 <div class="toast" id="toast"></div>
-<input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)" />
+<input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
 
 <script>
 'use strict';
+
 // ── STATE ──────────────────────────────────────────────────────────────────
-let entries = [], goals = [], apiKey = '', voiceLang = 'pl-PL';
+let entries = [], goals = [];
+let oaiKey = '', antKey = '', voiceLang = 'pl';
 let selMoodData = null, selTags = [];
-let recognition = null, isListening = false;
+let mediaRecorder = null, audioChunks = [], isRecording = false;
+let recTimer = null, recSeconds = 0;
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 function init() {
-  try { entries = JSON.parse(localStorage.getItem('lj_entries') || '[]'); } catch(e) { entries = []; }
-  try { goals   = JSON.parse(localStorage.getItem('lj_goals')   || '[]'); } catch(e) { goals = []; }
-  apiKey    = localStorage.getItem('lj_ak')   || '';
-  voiceLang = localStorage.getItem('lj_lang') || 'pl-PL';
-  if (apiKey) document.getElementById('ak-input').value = '•'.repeat(24);
+  try { entries = JSON.parse(localStorage.getItem('lj_entries') || '[]'); } catch(e) { entries=[]; }
+  try { goals   = JSON.parse(localStorage.getItem('lj_goals')   || '[]'); } catch(e) { goals=[]; }
+  oaiKey    = localStorage.getItem('lj_oai') || '';
+  antKey    = localStorage.getItem('lj_ant') || '';
+  voiceLang = localStorage.getItem('lj_lang') || 'pl';
+  updateKeyStatuses();
   updateLangBtns();
   const d = new Date();
   document.getElementById('hdate').textContent =
@@ -344,7 +339,7 @@ function persist() {
   localStorage.setItem('lj_goals',   JSON.stringify(goals));
 }
 
-// ── NAVIGATION ─────────────────────────────────────────────────────────────
+// ── NAV ────────────────────────────────────────────────────────────────────
 function showScreen(id, btn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
@@ -368,99 +363,137 @@ function toggleTag(chip, tag) {
   else selTags.push(tag);
 }
 
-// ── VOICE ──────────────────────────────────────────────────────────────────
-function toggleVoice() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { toast('Głos niedostępny w tej przeglądarce. Użyj Chrome na Androidzie.'); return; }
+// ── WHISPER RECORDING ──────────────────────────────────────────────────────
+async function toggleRecord() {
+  if (isRecording) {
+    stopRecording();
+  } else {
+    await startRecording();
+  }
+}
 
-  if (isListening) {
-    // User manually stops — stop and polish
-    isListening = false;
-    if (recognition) recognition.abort();
-    const btn     = document.getElementById('vbtn');
-    const lbl     = document.getElementById('vlabel');
-    const interim = document.getElementById('interim');
-    const box     = document.getElementById('tbox');
-    btn.classList.remove('listening');
-    lbl.textContent = 'Naciśnij, aby dyktować';
-    interim.classList.remove('show');
-    if (apiKey && box.value.trim().length > 15) polishText(box.value.trim(), box);
+async function startRecording() {
+  if (!oaiKey) {
+    toast('Dodaj klucz OpenAI w Ustawieniach żeby używać Whisper.');
     return;
   }
-
-  const btn     = document.getElementById('vbtn');
-  const lbl     = document.getElementById('vlabel');
-  const interim = document.getElementById('interim');
-  const box     = document.getElementById('tbox');
-
-  // Capture existing text before starting
-  let committedText = box.value.trim();
-
-  function startRecognition() {
-    if (!isListening) return; // was stopped manually
-    recognition = new SR();
-    recognition.lang = voiceLang;
-    recognition.interimResults = true;
-    recognition.continuous = false; // single utterance, we restart manually
-
-    recognition.onresult = e => {
-      let finalChunk = '', interimChunk = '';
-      for (let i = 0; i < e.results.length; i++) {
-        if (e.results[i].isFinal) finalChunk += e.results[i][0].transcript;
-        else interimChunk += e.results[i][0].transcript;
-      }
-      // Show interim preview
-      interim.textContent = interimChunk;
-      interim.classList.toggle('show', !!interimChunk);
-      // Update box: committed + new final + interim preview
-      const display = (committedText + (committedText && finalChunk ? ' ' : '') + finalChunk).trim();
-      box.value = display + (interimChunk ? ' ' + interimChunk : '');
-      if (finalChunk) committedText = display;
-    };
-
-    recognition.onerror = e => {
-      if (e.error === 'no-speech' || e.error === 'aborted') {
-        // restart silently if still listening
-        if (isListening) startRecognition();
-      }
-    };
-
-    recognition.onend = () => {
-      interim.classList.remove('show');
-      // Auto-restart to keep listening until user taps stop
-      if (isListening) startRecognition();
-    };
-
-    try { recognition.start(); } catch(e) {}
-  }
-
-  isListening = true;
-  btn.classList.add('listening');
-  lbl.textContent = 'Słucham… naciśnij, aby zatrzymać';
-  startRecognition();
-}
-
-async function polishText(raw, box) {
-  if (!apiKey) return;
   try {
-    const clean = await callClaude(
-      `Jesteś edytorem transkrypcji. Użytkownik podyktował ten tekst. Popraw błędy rozpoznawania mowy, interpunkcję i wielkie litery. Zachowaj znaczenie i styl dokładnie. Zwróć TYLKO poprawiony tekst, nic więcej.\n\nTekst: ${raw}`,
-      250
-    );
-    if (clean && clean.trim()) { box.value = clean.trim(); toast('Transkrypcja poprawiona ✓'); }
-  } catch(e) {}
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioChunks = [];
+
+    // Pick best supported format
+    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+      ? 'audio/webm;codecs=opus'
+      : MediaRecorder.isTypeSupported('audio/webm')
+      ? 'audio/webm'
+      : 'audio/mp4';
+
+    mediaRecorder = new MediaRecorder(stream, { mimeType });
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      processAudio();
+    };
+    mediaRecorder.start(1000); // collect chunks every second
+
+    isRecording = true;
+    recSeconds = 0;
+    updateRecordUI(true);
+    recTimer = setInterval(() => {
+      recSeconds++;
+      const m = Math.floor(recSeconds / 60);
+      const s = recSeconds % 60;
+      document.getElementById('vtimer').textContent = m + ':' + String(s).padStart(2,'0');
+    }, 1000);
+
+  } catch(e) {
+    toast('Brak dostępu do mikrofonu. Sprawdź uprawnienia.');
+  }
 }
 
-// ── SAVE / CLEAR ───────────────────────────────────────────────────────────
+function stopRecording() {
+  if (mediaRecorder && isRecording) {
+    mediaRecorder.stop();
+    isRecording = false;
+    clearInterval(recTimer);
+    updateRecordUI(false, true); // processing state
+  }
+}
+
+function updateRecordUI(recording, processing) {
+  const btn   = document.getElementById('vbtn');
+  const lbl   = document.getElementById('vlabel');
+  const timer = document.getElementById('vtimer');
+  const vsize = document.getElementById('vsize');
+
+  btn.classList.remove('recording', 'processing');
+  if (recording) {
+    btn.classList.add('recording');
+    lbl.textContent = 'Nagrywam… naciśnij aby zatrzymać';
+    timer.classList.add('show');
+    vsize.classList.remove('show');
+  } else if (processing) {
+    btn.classList.add('processing');
+    lbl.textContent = 'Wysyłam do Whisper…';
+    timer.classList.remove('show');
+  } else {
+    lbl.textContent = 'Naciśnij i mów';
+    timer.classList.remove('show');
+    vsize.classList.remove('show');
+  }
+}
+
+async function processAudio() {
+  if (!audioChunks.length) { updateRecordUI(false); return; }
+
+  const mimeType = audioChunks[0].type || 'audio/webm';
+  const blob = new Blob(audioChunks, { type: mimeType });
+  const ext  = mimeType.includes('mp4') ? 'mp4' : 'webm';
+
+  document.getElementById('vsize').textContent = (blob.size / 1024).toFixed(0) + ' KB nagrane';
+  document.getElementById('vsize').classList.add('show');
+
+  try {
+    const formData = new FormData();
+    formData.append('file', blob, 'recording.' + ext);
+    formData.append('model', 'whisper-1');
+    formData.append('language', voiceLang);
+    formData.append('response_format', 'text');
+
+    const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + oaiKey },
+      body: formData
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error('Whisper error ' + res.status + ': ' + err);
+    }
+
+    const transcript = await res.text();
+    const box = document.getElementById('tbox');
+    const existing = box.value.trim();
+    box.value = existing ? existing + '\n' + transcript.trim() : transcript.trim();
+    toast('✓ Whisper transkrybował pomyślnie');
+    updateRecordUI(false);
+
+  } catch(e) {
+    toast('Błąd Whisper: ' + e.message.substring(0, 60));
+    updateRecordUI(false);
+  }
+}
+
+// ── SAVE ───────────────────────────────────────────────────────────────────
 function saveEntry() {
   const text = document.getElementById('tbox').value.trim();
-  if (!text) { toast('Najpierw napisz lub podyktuj coś.'); return; }
+  if (!text) { toast('Nagraj lub napisz coś najpierw.'); return; }
   const entry = { id: Date.now(), date: new Date().toISOString(), text, mood: selMoodData, tags: [...selTags] };
   entries.unshift(entry);
   persist();
   clearEntry();
   toast('Wpis zapisany.');
-  if (apiKey) quickReflect(entry);
+  if (antKey) quickReflect(entry);
 }
 
 function quickReflect(entry) {
@@ -469,16 +502,15 @@ function quickReflect(entry) {
   box.classList.add('open');
   txt.innerHTML = '<span class="spin"></span>Analizuję…';
   callClaude(
-    `Jesteś ciepłym, wnikliwym coachem życiowym. Użytkownik napisał ten wpis do dziennika. Napisz 2-3 zdania refleksji po polsku — zauważ emocje, zaproponuj zachętę lub zadaj jedno znaczące pytanie. Bądź zwięzły i ludzki.\n\nWpis: "${entry.text.substring(0,600)}"\nNastrój: ${entry.mood ? entry.mood.key : 'nie określony'}\nTagi: ${entry.tags.join(', ') || 'brak'}`
-  ).then(r => { txt.textContent = r; }).catch(() => { txt.textContent = 'Dodaj klucz API w Ustawieniach, aby włączyć refleksje AI.'; });
+    `Jesteś ciepłym coachem życiowym. Użytkownik napisał ten wpis do dziennika. Napisz 2-3 zdania refleksji po polsku — zauważ emocje, zaproponuj zachętę lub zadaj jedno znaczące pytanie.\n\nWpis: "${entry.text.substring(0,600)}"\nNastrój: ${entry.mood ? entry.mood.key : 'nie określony'}`
+  ).then(r => { txt.textContent = r; }).catch(() => { txt.textContent = 'Błąd połączenia z Claude.'; });
 }
 
 function clearEntry() {
   document.getElementById('tbox').value = '';
   document.querySelectorAll('.mb').forEach(b => b.classList.remove('sel'));
   document.querySelectorAll('.tc').forEach(c => c.classList.remove('sel'));
-  selMoodData = null;
-  selTags = [];
+  selMoodData = null; selTags = [];
   document.getElementById('ai-rec').classList.remove('open');
 }
 
@@ -487,279 +519,209 @@ function renderEntries() {
   const el = document.getElementById('elist');
   const q  = (document.getElementById('search').value || '').toLowerCase();
   let list = q ? entries.filter(e =>
-    e.text.toLowerCase().includes(q) || (e.tags || []).some(t => t.includes(q))
+    e.text.toLowerCase().includes(q) || (e.tags||[]).some(t => t.includes(q))
   ) : entries;
-
   if (!list.length) {
-    el.innerHTML = `<div class="empty">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      <p>${q ? 'Brak wyników dla tego wyszukiwania.' : 'Brak wpisów. Naciśnij Nagraj, aby zacząć.'}</p>
-    </div>`;
+    el.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>${q?'Brak wyników.':'Brak wpisów. Nagraj pierwszy wpis!'}</p></div>`;
     return;
   }
-
   el.innerHTML = list.map(e => {
     const d  = new Date(e.date);
-    const ds = d.toLocaleDateString('pl-PL', {day:'numeric', month:'short', year:'numeric'}) +
-               ' ' + d.toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'});
-    const tagsHtml = (e.tags || []).map(t => `<span class="ec-tag">${t}</span>`).join('');
+    const ds = d.toLocaleDateString('pl-PL',{day:'numeric',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'});
+    const tagsHtml = (e.tags||[]).map(t=>`<span class="ec-tag">${t}</span>`).join('');
     return `<div class="ec">
-      <div class="ec-head"><span class="ec-date">${ds}</span><span class="ec-mood">${e.mood ? e.mood.emoji : '·'}</span></div>
-      <div class="ec-text">${esc(e.text.substring(0,280))}${e.text.length > 280 ? '…' : ''}</div>
-      ${tagsHtml ? `<div class="ec-tags">${tagsHtml}</div>` : ''}
+      <div class="ec-head"><span class="ec-date">${ds}</span><span class="ec-mood">${e.mood?e.mood.emoji:'·'}</span></div>
+      <div class="ec-text">${esc(e.text.substring(0,300))}${e.text.length>300?'…':''}</div>
+      ${tagsHtml?`<div class="ec-tags">${tagsHtml}</div>`:''}
       <div class="ec-actions">
         <button class="abtn" onclick="analyzeEntry(${e.id})">✦ Analizuj</button>
-        <button class="tbtn" onclick="transcribeEntry(${e.id})">◎ Transkrypcja</button>
-        <button class="dbtn" onclick="deleteEntry(${e.id})">✕</button>
+        <button class="dbtn" onclick="deleteEntry(${e.id})">✕ Usuń</button>
       </div>
-      <div class="ai-box" id="ae${e.id}">
-        <div class="ai-lbl" id="ael${e.id}">✦ Analiza</div>
-        <div class="ai-txt" id="at${e.id}"></div>
-      </div>
+      <div class="ai-box" id="ae${e.id}"><div class="ai-lbl">✦ Analiza</div><div class="ai-txt" id="at${e.id}"></div></div>
     </div>`;
   }).join('');
 }
 
-function esc(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function deleteEntry(id) {
   if (!confirm('Usunąć ten wpis?')) return;
   entries = entries.filter(e => e.id !== id);
-  persist();
-  renderEntries();
+  persist(); renderEntries();
 }
 
 function analyzeEntry(id) {
   const entry = entries.find(e => e.id === id);
   if (!entry) return;
-  const box = document.getElementById('ae' + id);
-  const txt = document.getElementById('at' + id);
-  const lbl = document.getElementById('ael' + id);
+  const box = document.getElementById('ae'+id);
+  const txt = document.getElementById('at'+id);
   box.classList.add('open');
-  lbl.textContent = '✦ Analiza';
-  if (!apiKey) { txt.textContent = 'Dodaj klucz API w Ustawieniach.'; return; }
+  if (!antKey) { txt.textContent = 'Dodaj klucz Claude w Ustawieniach.'; return; }
   txt.innerHTML = '<span class="spin"></span>Analizuję…';
   callClaude(
-    `Przeanalizuj ten wpis do dziennika po polsku. Zidentyfikuj: 1) kluczowe emocje, 2) powtarzające się tematy, 3) spostrzeżenie, którego autor mógł nie zauważyć, 4) jedno praktyczne zalecenie. Ciepło, zwięźle, pomocnie.\n\nWpis: "${entry.text.substring(0,900)}"`
-  ).then(r => { txt.textContent = r; }).catch(err => { txt.textContent = 'Błąd: ' + err.message; });
-}
-
-function transcribeEntry(id) {
-  const entry = entries.find(e => e.id === id);
-  if (!entry) return;
-  const box = document.getElementById('ae' + id);
-  const txt = document.getElementById('at' + id);
-  const lbl = document.getElementById('ael' + id);
-  box.classList.add('open');
-  lbl.textContent = '◎ Poprawiona transkrypcja';
-  if (!apiKey) { txt.textContent = 'Dodaj klucz API w Ustawieniach.'; return; }
-  txt.innerHTML = '<span class="spin"></span>Poprawiam transkrypcję…';
-  callClaude(
-    `Jesteś profesjonalnym edytorem transkrypcji. Ten tekst został przechwycony przez rozpoznawanie mowy i może zawierać błędy. Popraw go: napraw gramatykę, interpunkcję, wielkie litery i oczywiste błędy dyktowania. Zachowaj głos i znaczenie autora. Zwróć TYLKO poprawiony tekst.\n\nOryginalny: ${entry.text.substring(0,1200)}`,
-    700
-  ).then(r => {
-    txt.innerHTML = `<div style="margin-bottom:10px;white-space:pre-wrap;">${esc(r)}</div>
-      <button onclick="applyTranscription(${id},'${btoa(encodeURIComponent(r))}')" style="padding:7px 16px;border-radius:8px;border:1px solid rgba(226,176,74,0.3);background:rgba(226,176,74,0.12);color:var(--gold);font-size:12px;cursor:pointer;font-family:inherit;">Zastosuj do wpisu</button>`;
-  }).catch(err => { txt.textContent = 'Błąd: ' + err.message; });
-}
-
-function applyTranscription(id, encoded) {
-  const cleaned = decodeURIComponent(atob(encoded));
-  const idx = entries.findIndex(e => e.id === id);
-  if (idx === -1) return;
-  entries[idx].text = cleaned;
-  persist();
-  toast('Wpis zaktualizowany ✓');
-  renderEntries();
+    `Przeanalizuj ten wpis do dziennika po polsku. Zidentyfikuj: 1) kluczowe emocje, 2) powtarzające się tematy, 3) spostrzeżenie którego autor mógł nie zauważyć, 4) jedno praktyczne zalecenie. Ciepło, zwięźle.\n\nWpis: "${entry.text.substring(0,900)}"`
+  ).then(r=>{txt.textContent=r;}).catch(err=>{txt.textContent='Błąd: '+err.message;});
 }
 
 // ── INSIGHTS ───────────────────────────────────────────────────────────────
 function renderInsights() {
   document.getElementById('i-total').textContent  = entries.length;
   document.getElementById('i-streak').textContent = calcStreak();
-
-  const moodE = entries.filter(e => e.mood);
+  const moodE = entries.filter(e=>e.mood);
   if (moodE.length) {
-    const avg = moodE.reduce((a, e) => a + e.mood.val, 0) / moodE.length;
-    const moods = {awful:1, bad:2, okay:3, good:4, great:5};
-    const emojis = {awful:'😞', bad:'😕', okay:'😐', good:'🙂', great:'😄'};
-    const nearest = Object.entries(moods).reduce((p, c) => Math.abs(c[1]-avg) < Math.abs(p[1]-avg) ? c : p);
-    document.getElementById('i-mood').textContent = emojis[nearest[0]];
+    const avg = moodE.reduce((a,e)=>a+e.mood.val,0)/moodE.length;
+    const moods={awful:1,bad:2,okay:3,good:4,great:5};
+    const emojis={awful:'😞',bad:'😕',okay:'😐',good:'🙂',great:'😄'};
+    const nearest=Object.entries(moods).reduce((p,c)=>Math.abs(c[1]-avg)<Math.abs(p[1]-avg)?c:p);
+    document.getElementById('i-mood').textContent=emojis[nearest[0]];
   }
-
-  const chart = document.getElementById('mchart');
-  const last7 = entries.filter(e => e.mood).slice(0, 7).reverse();
-  if (!last7.length) {
-    chart.innerHTML = '<span style="font-size:13px;color:var(--text3)">Brak danych nastroju.</span>';
-    return;
-  }
-  chart.innerHTML = last7.map(e => {
-    const h = Math.max(6, Math.round((e.mood.val / 5) * 56));
-    const c = e.mood.val >= 4 ? 'var(--gold)' : 'rgba(226,176,74,0.3)';
+  const chart=document.getElementById('mchart');
+  const last7=entries.filter(e=>e.mood).slice(0,7).reverse();
+  if (!last7.length){chart.innerHTML='<span style="font-size:13px;color:var(--text3)">Brak danych nastroju.</span>';return;}
+  chart.innerHTML=last7.map(e=>{
+    const h=Math.max(6,Math.round((e.mood.val/5)*56));
+    const c=e.mood.val>=4?'var(--gold)':'rgba(226,176,74,0.3)';
     return `<div class="bar" style="height:${h}px;background:${c};border:1px solid rgba(226,176,74,0.25);"><span>${e.mood.emoji}</span></div>`;
   }).join('');
 }
 
 function calcStreak() {
   if (!entries.length) return 0;
-  const days  = [...new Set(entries.map(e => e.date.slice(0, 10)))].sort().reverse();
-  const today = new Date().toISOString().slice(0, 10);
-  if (days[0] !== today) return 0;
-  let streak = 1;
-  for (let i = 1; i < days.length; i++) {
-    const prev = new Date(days[i-1]);
-    prev.setDate(prev.getDate() - 1);
-    if (days[i] === prev.toISOString().slice(0, 10)) streak++;
+  const days=[...new Set(entries.map(e=>e.date.slice(0,10)))].sort().reverse();
+  const today=new Date().toISOString().slice(0,10);
+  if (days[0]!==today) return 0;
+  let streak=1;
+  for (let i=1;i<days.length;i++){
+    const prev=new Date(days[i-1]); prev.setDate(prev.getDate()-1);
+    if (days[i]===prev.toISOString().slice(0,10)) streak++;
     else break;
   }
   return streak;
 }
 
 function weekSummary() {
-  const box = document.getElementById('ai-week');
-  const txt = document.getElementById('ai-week-txt');
+  const box=document.getElementById('ai-week');
+  const txt=document.getElementById('ai-week-txt');
   box.classList.add('open');
-  if (!apiKey) { txt.textContent = 'Dodaj klucz API Claude w Ustawieniach.'; return; }
-  const recent = entries.slice(0, 14);
-  if (!recent.length) { txt.textContent = 'Najpierw napisz kilka wpisów.'; return; }
-  const digest = recent.map((e, i) =>
-    `Wpis ${i+1} (${e.date.slice(0,10)}, nastrój:${e.mood ? e.mood.key : 'brak'}, tagi:${(e.tags||[]).join(',') || 'brak'}): ${e.text.substring(0,220)}`
-  ).join('\n');
-  txt.innerHTML = '<span class="spin"></span>Generuję…';
+  if (!antKey){txt.textContent='Dodaj klucz Claude w Ustawieniach.';return;}
+  const recent=entries.slice(0,14);
+  if (!recent.length){txt.textContent='Najpierw napisz kilka wpisów.';return;}
+  const digest=recent.map((e,i)=>`Wpis ${i+1} (${e.date.slice(0,10)}, nastrój:${e.mood?e.mood.key:'brak'}): ${e.text.substring(0,220)}`).join('\n');
+  txt.innerHTML='<span class="spin"></span>Generuję…';
   callClaude(
-    `Jesteś coachem życiowym. Oto ostatnie wpisy do dziennika użytkownika:\n\n${digest}\n\nNapisz ciepłe tygodniowe podsumowanie po polsku obejmujące: 1) główne tematy i emocje, 2) postęp lub wyzwania, 3) wzorce nastroju, 4) dwie konkretne zachęty, 5) jedno pytanie do refleksji. Maks. 250 słów.`,
-    600
-  ).then(r => { txt.textContent = r; }).catch(err => { txt.textContent = 'Błąd: ' + err.message; });
+    `Jesteś coachem życiowym. Oto ostatnie wpisy użytkownika:\n\n${digest}\n\nNapisz tygodniowe podsumowanie po polsku: 1) główne tematy i emocje, 2) postęp lub wyzwania, 3) wzorce nastroju, 4) dwie zachęty, 5) jedno pytanie do refleksji. Maks 250 słów.`,600
+  ).then(r=>{txt.textContent=r;}).catch(err=>{txt.textContent='Błąd: '+err.message;});
 }
 
 // ── GOALS ──────────────────────────────────────────────────────────────────
 function renderGoals() {
-  const el = document.getElementById('glist');
-  if (!goals.length) {
-    el.innerHTML = `<div class="empty" style="padding:32px 0 20px;">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-      <p>Ustaw swój pierwszy cel poniżej.</p>
-    </div>`;
+  const el=document.getElementById('glist');
+  if (!goals.length){
+    el.innerHTML='<div class="empty" style="padding:32px 0 20px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><p>Ustaw swój pierwszy cel poniżej.</p></div>';
     return;
   }
-  el.innerHTML = goals.map((g, i) => `
-    <div class="goal-item">
-      <button class="gc${g.done ? ' done' : ''}" onclick="toggleGoal(${i})" aria-label="${g.done ? 'Odznacz' : 'Zaznacz'}"></button>
-      <span class="gt" style="text-decoration:${g.done ? 'line-through' : 'none'};opacity:${g.done ? '0.5' : '1'}">${esc(g.text)}</span>
-      <span class="gd" onclick="removeGoal(${i})" role="button" aria-label="Usuń">×</span>
-    </div>`
-  ).join('');
+  el.innerHTML=goals.map((g,i)=>`<div class="goal-item">
+    <button class="gc${g.done?' done':''}" onclick="toggleGoal(${i})">${g.done?'✓':''}</button>
+    <span class="gt" style="text-decoration:${g.done?'line-through':'none'};opacity:${g.done?0.5:1}">${esc(g.text)}</span>
+    <span class="gd" onclick="removeGoal(${i})">×</span>
+  </div>`).join('');
 }
 
-function addGoal() {
-  const inp = document.getElementById('ginput');
-  const t   = inp.value.trim();
+function addGoal(){
+  const inp=document.getElementById('ginput');
+  const t=inp.value.trim();
   if (!t) return;
-  goals.push({ text: t, done: false, created: new Date().toISOString() });
-  persist();
-  inp.value = '';
-  renderGoals();
+  goals.push({text:t,done:false,created:new Date().toISOString()});
+  persist(); inp.value=''; renderGoals();
 }
-
-function toggleGoal(i) { goals[i].done = !goals[i].done; persist(); renderGoals(); }
-function removeGoal(i) { goals.splice(i, 1); persist(); renderGoals(); }
+function toggleGoal(i){goals[i].done=!goals[i].done;persist();renderGoals();}
+function removeGoal(i){goals.splice(i,1);persist();renderGoals();}
 
 // ── SETTINGS ───────────────────────────────────────────────────────────────
 function setLang(lang, btn) {
-  voiceLang = lang;
-  localStorage.setItem('lj_lang', lang);
-  updateLangBtns();
-  toast('Język zmieniony.');
+  voiceLang=lang; localStorage.setItem('lj_lang',lang);
+  updateLangBtns(); toast('Język zmieniony.');
 }
-
-function updateLangBtns() {
-  document.querySelectorAll('.lb').forEach(b => b.classList.remove('active'));
-  const map = { 'pl-PL': 'l-pl', 'en-US': 'l-en', 'de-DE': 'l-de' };
-  const el = document.getElementById(map[voiceLang]);
+function updateLangBtns(){
+  document.querySelectorAll('.lb').forEach(b=>b.classList.remove('active'));
+  const map={'pl':'l-pl','en':'l-en','de':'l-de'};
+  const el=document.getElementById(map[voiceLang]);
   if (el) el.classList.add('active');
 }
 
-function saveKey(storageKey, lsKey, inputId) {
-  const v = document.getElementById(inputId).value.trim();
-  if (!v || v.includes('•')) { toast('Wpisz prawidłowy klucz API.'); return; }
-  apiKey = v;
-  localStorage.setItem(lsKey, v);
-  document.getElementById(inputId).value = '•'.repeat(24);
-  toast('Klucz API zapisany.');
+function saveOAIKey(){
+  const v=document.getElementById('oai-input').value.trim();
+  if (!v||v.includes('•')){toast('Wpisz prawidłowy klucz OpenAI.');return;}
+  oaiKey=v; localStorage.setItem('lj_oai',v);
+  document.getElementById('oai-input').value='•'.repeat(24);
+  updateKeyStatuses(); toast('Klucz OpenAI zapisany ✓');
+}
+
+function saveAntKey(){
+  const v=document.getElementById('ant-input').value.trim();
+  if (!v||v.includes('•')){toast('Wpisz prawidłowy klucz Anthropic.');return;}
+  antKey=v; localStorage.setItem('lj_ant',v);
+  document.getElementById('ant-input').value='•'.repeat(24);
+  updateKeyStatuses(); toast('Klucz Claude zapisany ✓');
+}
+
+function updateKeyStatuses(){
+  const os=document.getElementById('oai-status');
+  const as=document.getElementById('ant-status');
+  if (oaiKey){os.className='key-status ok';os.textContent='✓ Klucz OpenAI aktywny — Whisper gotowy';}
+  else{os.className='key-status missing';os.textContent='❌ Brak klucza — transkrypcja głosowa niedostępna';}
+  if (antKey){as.className='key-status ok';as.textContent='✓ Klucz Claude aktywny — analiza AI gotowa';}
+  else{as.className='key-status missing';as.textContent='❌ Brak klucza — analiza AI niedostępna';}
+  document.getElementById('sdot').className = (oaiKey||antKey) ? 'sync-dot ok' : 'sync-dot';
 }
 
 // ── DATA ───────────────────────────────────────────────────────────────────
-function exportData() {
-  const blob = new Blob([JSON.stringify({ entries, goals, exported: new Date().toISOString() }, null, 2)], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'life_journal_' + new Date().toISOString().slice(0, 10) + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('Wyeksportowano.');
+function exportData(){
+  const blob=new Blob([JSON.stringify({entries,goals,exported:new Date().toISOString()},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='life_journal_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click(); URL.revokeObjectURL(url); toast('Wyeksportowano.');
 }
-
-function importData() {
-  document.getElementById('import-file').click();
-}
-
-function handleImport(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      const data = JSON.parse(ev.target.result);
-      if (data.entries) { entries = data.entries; }
-      if (data.goals)   { goals   = data.goals; }
-      persist();
-      toast('Zaimportowano dane ✓');
-    } catch(err) { toast('Błąd: nieprawidłowy plik JSON.'); }
+function handleImport(e){
+  const file=e.target.files[0]; if (!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if (data.entries) entries=data.entries;
+      if (data.goals)   goals=data.goals;
+      persist(); toast('Zaimportowano dane ✓');
+    }catch(err){toast('Błąd: nieprawidłowy plik JSON.');}
   };
-  reader.readAsText(file);
-  e.target.value = '';
+  reader.readAsText(file); e.target.value='';
 }
-
-function clearAll() {
-  entries = []; goals = [];
+function clearAll(){
+  entries=[];goals=[];
   localStorage.removeItem('lj_entries');
   localStorage.removeItem('lj_goals');
   toast('Wszystkie dane usunięte.');
 }
 
 // ── CLAUDE API ─────────────────────────────────────────────────────────────
-async function callClaude(prompt, maxTokens = 400) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: maxTokens,
-      messages: [{ role: 'user', content: prompt }]
-    })
+async function callClaude(prompt, maxTokens=400){
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':antKey,'anthropic-version':'2023-06-01'},
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})
   });
-  if (!res.ok) throw new Error('Błąd API ' + res.status);
-  const d = await res.json();
-  return d.content?.[0]?.text || '';
+  if (!res.ok) throw new Error('API error '+res.status);
+  const d=await res.json();
+  return d.content?.[0]?.text||'';
 }
 
 // ── TOAST ──────────────────────────────────────────────────────────────────
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3200);
 }
 
-// ── START ──────────────────────────────────────────────────────────────────
 init();
 </script>
 </body>
